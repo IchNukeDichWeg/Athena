@@ -21,7 +21,7 @@ std::array<std::pair<Bitboard, Bitboard>, VALID_NB> PRECOMPUTED_TABLE_STRAIGHT;
 alignas(64) extern const 
 std::array<std::pair<Bitboard, Bitboard>, VALID_NB> PRECOMPUTED_TABLE_CRAWL;
 
-// [red, yellow, blue, green] pawn attacks
+// pawn attacks, indexed by Color::ID (red, blue, yellow, green)
 alignas(64) extern const 
 std::array<std::array<Bitboard, COLOR_NB>, VALID_NB> PRECOMPUTED_TABLE_PAWN;
 
@@ -43,10 +43,7 @@ Bitboard get_crawl_attacks(Square sq) noexcept {
 
 inline const 
 Bitboard get_pawn_attacks(Square sq, Color::ID color) noexcept {
-    auto reorder = 
-        ((static_cast<uint8_t>(color) & 0b10) >> 1) | 
-        ((static_cast<uint8_t>(color) & 0b01) << 1);
-    return PRECOMPUTED_TABLE_PAWN[sq.compact()][reorder];
+    return PRECOMPUTED_TABLE_PAWN[sq.compact()][static_cast<uint8_t>(color)];
 }
 
 template<Piece::ID piece>
